@@ -1,3 +1,4 @@
+// --- Definindo as variaveis do Player ---
 spd_max = 1.5;
 spd_caixa = 1;
 hspd = 0;
