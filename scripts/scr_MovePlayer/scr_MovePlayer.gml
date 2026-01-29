@@ -97,6 +97,18 @@ if (carregando && carregando_caixa != noone) {
     carregando_caixa.x = x;
     carregando_caixa.y = y - 16;
 }
+var porta = instance_place(x, y, obj_Door);
 
-	
+if (porta != noone
+&& !obj_Transicao.fading_out
+&& !obj_Transicao.fading_in) {
+
+    obj_Transicao.target_room = porta.room_destino;
+    obj_Transicao.spawn_x = porta.spawn_x;
+    obj_Transicao.spawn_y = porta.spawn_y;
+    obj_Transicao.has_spawn = true;
+
+    obj_Transicao.fading_out = true;
+}
+
 }
