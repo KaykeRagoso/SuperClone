@@ -38,14 +38,28 @@ if (!carregando) {
 }
 
 // --- Aplicar movimento ---
-if (can_move_x) x += hspd * move_spd;
-if (can_move_y) y += vspd * move_spd;
+if (can_move_x) {
+    x += hspd * move_spd;
+} else {
+    hspd = 0;
+}
+
+if (can_move_y) {
+    y += vspd * move_spd;
+} else {
+    vspd = 0;
+}
+
 
 // --- Direção olhando (prioriza teclado, mas funciona com joystick também) ---
-if (hspd > 0) dir = 0;
+if (hspd > 0){
+	dir = 0;
+}
 else if (hspd < 0) dir = 180;
 else if (vspd < 0) dir = 90;
 else if (vspd > 0) dir = 270;
+
+// -- Gerenciar os Sprites do Player --
 
 // --- Detectar caixa próxima ---
 var box_to_pick = noone;
@@ -110,5 +124,56 @@ if (porta != noone
 
     obj_Transicao.fading_out = true;
 }
+
+
+// -- Gerenciar os Sprites do Player --
+
+var moving = (hspd != 0 || vspd != 0);
+image_xscale = 1.75;
+image_yscale = 1.75;
+
+if (moving) {
+
+    // --- ANDANDO ---
+    if (abs(hspd) > abs(vspd)) {
+        // Movimento horizontal
+        if (hspd > 0) {
+            sprite_index = sprt_PlayerRunRight;
+        } else {
+            sprite_index = sprt_PlayerRunLeft;
+        }
+    } else {
+        // Movimento vertical
+        if (vspd > 0) {
+            sprite_index = sprt_PlayerRunDown;
+        } else {
+            sprite_index = sprt_PlayerRunTop;
+        }
+    }
+}
+else {
+    // --- PARADO (IDLE) ---
+    if (dir == 0) {
+        sprite_index = sprt_PlayerIdleRight;
+    }
+    else if (dir == 180) {
+        sprite_index = sprt_PlayerIdleLeft;
+    }
+    else if (dir == 90) {
+        sprite_index = sprt_PlayerIdleUp;
+    }
+    else if (dir == 270) {
+        sprite_index = sprt_PlayerIdle;
+    }
+}
+
+if (carregando){
+	image_speed	= 0.1;
+}
+
+// Garante animação correta
+image_speed = moving ? 0.4 : 0;
+image_index = moving ? image_index : 0;
+
 
 }

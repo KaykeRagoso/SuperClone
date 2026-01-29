@@ -15,3 +15,5 @@ grid = 32;
 carregando_spd = 2;
 carregando = false;
 carregando_caixa = noone;
+
+dir = 0;
