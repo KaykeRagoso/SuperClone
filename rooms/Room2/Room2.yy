@@ -16,13 +16,7 @@
     {"inherit":false,"visible":false,"xview":0,"yview":0,"wview":1366,"hview":768,"xport":0,"yport":0,"wport":1366,"hport":768,"hborder":32,"vborder":32,"hspeed":-1,"vspeed":-1,"objectId":null,},
   ],
   "layers": [
-    {"resourceType":"GMRInstanceLayer","resourceVersion":"1.0","name":"Instances_1","instances":[
-        {"resourceType":"GMRInstance","resourceVersion":"1.0","name":"inst_46D45DAA","properties":[
-            {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","propertyId":{"name":"room_destino","path":"objects/obj_Door/obj_Door.yy",},"objectId":{"name":"obj_Door","path":"objects/obj_Door/obj_Door.yy",},"value":"Room1",},
-            {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","propertyId":{"name":"spawn_x","path":"objects/obj_Door/obj_Door.yy",},"objectId":{"name":"obj_Door","path":"objects/obj_Door/obj_Door.yy",},"value":"90",},
-            {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","propertyId":{"name":"spawn_y","path":"objects/obj_Door/obj_Door.yy",},"objectId":{"name":"obj_Door","path":"objects/obj_Door/obj_Door.yy",},"value":"260",},
-          ],"isDnd":false,"objectId":{"name":"obj_Door","path":"objects/obj_Door/obj_Door.yy",},"inheritCode":false,"hasCreationCode":false,"colour":4294967295,"rotation":0.0,"scaleX":1.0,"scaleY":1.0,"imageIndex":0,"imageSpeed":1.0,"inheritedItemId":null,"frozen":false,"ignore":false,"inheritItemSettings":false,"x":128.0,"y":256.0,},
-      ],"visible":true,"depth":0,"userdefinedDepth":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritVisibility":true,"inheritSubLayers":true,"gridX":32,"gridY":32,"layers":[],"hierarchyFrozen":false,"effectEnabled":true,"effectType":null,"properties":[],},
+    {"resourceType":"GMRInstanceLayer","resourceVersion":"1.0","name":"Player","instances":[],"visible":true,"depth":0,"userdefinedDepth":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritVisibility":true,"inheritSubLayers":true,"gridX":32,"gridY":32,"layers":[],"hierarchyFrozen":false,"effectEnabled":true,"effectType":null,"properties":[],},
     {"resourceType":"GMRTileLayer","resourceVersion":"1.1","name":"Tiles_2","tilesetId":{"name":"t_Tile_Game","path":"tilesets/t_Tile_Game/t_Tile_Game.yy",},"x":0,"y":0,"tiles":{"TileDataFormat":1,"SerialiseWidth":43,"SerialiseHeight":24,"TileCompressedData":[
 18,9,10,9,10,9,10,9,10,9,10,9,10,9,10,9,10,0,0,-6,-2147483648,37,9,10,9,10,9,10,9,10,9,10,9,10,9,10,9,10,9,10,-2147483648,46,47,
 46,47,46,47,46,47,46,47,46,47,46,47,46,47,9,10,-6,-2147483648,37,46,47,46,47,46,47,46,47,46,47,46,47,46,47,46,47,46,47,-2147483648,83,84,83,84,83,
@@ -79,7 +73,6 @@
     {"name":"inst_7CE84215_1","path":"rooms/Room2/Room2.yy",},
     {"name":"inst_2CDD8F80_1","path":"rooms/Room2/Room2.yy",},
     {"name":"inst_1B94E2C8_1","path":"rooms/Room2/Room2.yy",},
-    {"name":"inst_46D45DAA","path":"rooms/Room2/Room2.yy",},
   ],
   "inheritCreationOrder": false,
   "sequenceId": null,
