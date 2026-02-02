@@ -1,11 +1,16 @@
-/// Create Event
+enum BOX_STATE {
+    GROUND,
+    CARRIED,
+    LOCKED
+}
 
-carregar = false;     // se a caixa está sendo carregada
-carrego  = noone;     // referência do player que está carregando
+state   = BOX_STATE.GROUND;
+carrego = noone;
 
-// Tamanho da zona de interação (hitbox maior que o sprite)
-interaction_width  = sprite_width  + 16; // 8 pixels extra em cada lado
-interaction_height = sprite_height + 16;
+// Escalas
+escala_ground  = 1/1.15; // ≈ 0.87
+escala_carried = 1/1.15;
 
-last_x = x;
-last_y = y;
+// Começa menor (solta)
+image_xscale = escala_ground;
+image_yscale = escala_ground;

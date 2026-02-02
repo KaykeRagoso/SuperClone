@@ -1,179 +1,144 @@
-// Os recursos de script mudaram para a v2.3.0; veja
-// https://help.yoyogames.com/hc/en-us/articles/360005277377 para obter mais informações
-function scr_MovePlayer(){
-/// Step Event do Player
+function scr_MovePlayer() {
 
-// --- Velocidade ---
-var move_spd = carregando ? spd_caixa : spd_max;
+    /// --- Velocidade ---
+    var move_spd = carregando ? spd_caixa : spd_max;
 
-// --- Input combinando teclado (setas + WASD) e joystick ---
-hspd = keyboard_check(vk_right) - keyboard_check(vk_left) 
-          + keyboard_check(ord("D")) - keyboard_check(ord("A"));
+    /// --- Input (teclado + WASD) ---
+    var key_x = keyboard_check(vk_right) - keyboard_check(vk_left)
+              + keyboard_check(ord("D")) - keyboard_check(ord("A"));
+    var key_y = keyboard_check(vk_down) - keyboard_check(vk_up)
+              + keyboard_check(ord("S")) - keyboard_check(ord("W"));
 
-vspd = keyboard_check(vk_down) - keyboard_check(vk_up) 
-          + keyboard_check(ord("S")) - keyboard_check(ord("W"));
+    var hspd = key_x;
+    var vspd = key_y;
 
-// Joystick (considerando joystick 0, o primeiro conectado)
-var _deviceControl = 0;
-if (gamepad_is_connected(_deviceControl)) {
-    hspd += gamepad_axis_value(_deviceControl, gp_axislh);
-    vspd += gamepad_axis_value(_deviceControl, gp_axislv);
-}
+    /// --- Joystick ---
+    var _deviceControl = 0;
+    if (gamepad_is_connected(_deviceControl)) {
+        hspd += gamepad_axis_value(_deviceControl, gp_axislh);
+        vspd += gamepad_axis_value(_deviceControl, gp_axislv);
+    }
 
-// Normaliza para não andar mais rápido na diagonal
-var len = sqrt(hspd*hspd + vspd*vspd);
-if (len != 0) {
-    hspd /= len;
-    vspd /= len;
-}
+    /// --- Normaliza velocidade diagonal ---
+    var len = sqrt(hspd*hspd + vspd*vspd);
+    if (len > 0) {
+        hspd /= len;
+        vspd /= len;
+    }
 
-// --- Colisão com paredes ---
-var can_move_x = !place_meeting(x + hspd * move_spd, y, obj_Block);
-var can_move_y = !place_meeting(x, y + vspd * move_spd, obj_Block);
+    /// --- Define direção olhando ---
+    if (abs(key_x) > abs(key_y)) {
+        dir = (key_x > 0) ? 0 : 180;
+    } else if (abs(key_y) > 0) {
+        dir = (key_y > 0) ? 270 : 90;
+    }
 
-// --- Colisão com caixas (só quando não está carregando) ---
-if (!carregando) {
-    if (place_meeting(x + hspd * move_spd, y, obj_Box)) can_move_x = false;
-    if (place_meeting(x, y + vspd * move_spd, obj_Box)) can_move_y = false;
-}
+    /// --- Colisão com paredes ---
+    var can_move_x = !place_meeting(x + hspd*move_spd, y, obj_Block);
+    var can_move_y = !place_meeting(x, y + vspd*move_spd, obj_Block);
 
-// --- Aplicar movimento ---
-if (can_move_x) {
-    x += hspd * move_spd;
-} else {
-    hspd = 0;
-}
+    /// --- Colisão com caixas ---
+    var box_x = instance_place(x + hspd*move_spd, y, obj_Box);
+    var box_y = instance_place(x, y + vspd*move_spd, obj_Box);
 
-if (can_move_y) {
-    y += vspd * move_spd;
-} else {
-    vspd = 0;
-}
+    if (!carregando) {
+        if (box_x != noone && box_x.state == BOX_STATE.GROUND) can_move_x = false;
+        if (box_y != noone && box_y.state == BOX_STATE.GROUND) can_move_y = false;
+    } else {
+        if (box_x != noone && box_x != carregando_caixa && box_x.state == BOX_STATE.GROUND) can_move_x = false;
+        if (box_y != noone && box_y != carregando_caixa && box_y.state == BOX_STATE.GROUND) can_move_y = false;
+    }
 
+    /// --- Aplicar movimento ---
+    if (can_move_x) x += hspd * move_spd; else hspd = 0;
+    if (can_move_y) y += vspd * move_spd; else vspd = 0;
 
-// --- Direção olhando (prioriza teclado, mas funciona com joystick também) ---
-if (hspd > 0){
-	dir = 0;
-}
-else if (hspd < 0) dir = 180;
-else if (vspd < 0) dir = 90;
-else if (vspd > 0) dir = 270;
-
-// -- Gerenciar os Sprites do Player --
-
-// --- Detectar caixa próxima ---
-var box_to_pick = noone;
-var nearest_dist = 999;
-
-for (var i = 0; i < instance_number(obj_Box); i++) {
-    var box = instance_find(obj_Box, i);
-    if (!box.carregar) {
-        var d = point_distance(x, y, box.x, box.y);
-        if (d <= 48 && d < nearest_dist) {
-            nearest_dist = d;
-            box_to_pick = box;
+    /// --- Detectar caixa próxima ---
+    var box_to_pick = noone;
+    var nearest_dist = 48;
+    with (obj_Box) {
+        if (state == BOX_STATE.GROUND) {
+            var d = point_distance(other.x, other.y, x, y);
+            if (d <= nearest_dist) {
+                nearest_dist = d;
+                box_to_pick = id;
+            }
         }
     }
-}
 
-// --- Pegar / Soltar caixa ---
-if (keyboard_check_pressed(vk_space) || (gamepad_is_connected(_deviceControl) && gamepad_button_check_pressed(_deviceControl, gp_face1))) {
-    if (!carregando && box_to_pick != noone) {
-        // Começa a carregar a caixa
-        carregando = true;
-        carregando_caixa = box_to_pick;
+    /// --- Pegar / Soltar caixa ---
+    var pressed_pick = keyboard_check_pressed(vk_space)
+                    || (gamepad_is_connected(_deviceControl) && gamepad_button_check_pressed(_deviceControl, gp_face1));
 
-        box_to_pick.carregar = true;
-        box_to_pick.carrego = id;
+    if (pressed_pick) {
+        // PEGAR
+        if (!carregando && box_to_pick != noone) {
+            carregando = true;
+            carregando_caixa = box_to_pick;
+            box_to_pick.state = BOX_STATE.CARRIED;
+            box_to_pick.carrego = id;
+        }
+        // SOLTAR
+        else if (carregando) {
+            var drop_dist = 48;
+            var drop_x = x + lengthdir_x(drop_dist, dir);
+            var drop_y = y + lengthdir_y(drop_dist, dir);
 
-    } else if (carregando) {
-        // Posição tentativa de drop
-        var drop_x = x + lengthdir_x(16 * 3, dir);
-        var drop_y = y + lengthdir_y(16 * 3, dir);
+            var can_drop = true;
 
-        // Verifica se a caixa caberia ali
-        if (!place_meeting(drop_x, drop_y, obj_Block)) {
-            // Solta a caixa
+            var original_x = carregando_caixa.x;
+            var original_y = carregando_caixa.y;
+
             carregando_caixa.x = drop_x;
             carregando_caixa.y = drop_y;
+            carregando_caixa.state = BOX_STATE.GROUND;
 
-            carregando_caixa.carregar = false;
-            carregando_caixa.carrego = noone;
+            if (place_meeting(drop_x, drop_y, obj_Block)) can_drop = false;
 
-            carregando_caixa = noone;
-            carregando = false;
+            var other_box = instance_place(drop_x, drop_y, obj_Box);
+            if (other_box != noone && other_box != carregando_caixa) can_drop = false;
+
+            if (!can_drop) {
+                carregando_caixa.x = original_x;
+                carregando_caixa.y = original_y;
+                carregando_caixa.state = BOX_STATE.CARRIED;
+            } else {
+                carregando_caixa.carrego = noone;
+                carregando_caixa = noone;
+                carregando = false;
+            }
         }
     }
-}
 
-// --- Caixa segue o player enquanto carregando ---
-if (carregando && carregando_caixa != noone) {
-    carregando_caixa.x = x;
-    carregando_caixa.y = y - 16;
-}
-var porta = instance_place(x, y, obj_Door);
+    /// --- Portas ---
+    var porta = instance_place(x, y, obj_door);
+    if (porta != noone && !obj_Transicao.fading_out && !obj_Transicao.fading_in) {
+        obj_Transicao.target_room = porta.room_destino;
+        obj_Transicao.spawn_x = porta.spawn_x;
+        obj_Transicao.spawn_y = porta.spawn_y;
+        obj_Transicao.has_spawn = true;
+        obj_Transicao.fading_out = true;
+    }
 
-if (porta != noone
-&& !obj_Transicao.fading_out
-&& !obj_Transicao.fading_in) {
+    /// --- Animação do Player ---
+    var moving = (hspd != 0 || vspd != 0);
+    image_xscale = 1.75;
+    image_yscale = 1.75;
 
-    obj_Transicao.target_room = porta.room_destino;
-    obj_Transicao.spawn_x = porta.spawn_x;
-    obj_Transicao.spawn_y = porta.spawn_y;
-    obj_Transicao.has_spawn = true;
-
-    obj_Transicao.fading_out = true;
-}
-
-
-// -- Gerenciar os Sprites do Player --
-
-var moving = (hspd != 0 || vspd != 0);
-image_xscale = 1.75;
-image_yscale = 1.75;
-
-if (moving) {
-
-    // --- ANDANDO ---
-    if (abs(hspd) > abs(vspd)) {
-        // Movimento horizontal
-        if (hspd > 0) {
-            sprite_index = sprt_PlayerRunRight;
+    if (moving) {
+        if (abs(hspd) > abs(vspd)) {
+            sprite_index = (hspd > 0) ? sprt_PlayerRunRight : sprt_PlayerRunLeft;
         } else {
-            sprite_index = sprt_PlayerRunLeft;
+            sprite_index = (vspd > 0) ? sprt_PlayerRunDown : sprt_PlayerRunTop;
         }
     } else {
-        // Movimento vertical
-        if (vspd > 0) {
-            sprite_index = sprt_PlayerRunDown;
-        } else {
-            sprite_index = sprt_PlayerRunTop;
-        }
+        if (dir == 0) sprite_index = sprt_PlayerIdleRight;
+        else if (dir == 180) sprite_index = sprt_PlayerIdleLeft;
+        else if (dir == 90) sprite_index = sprt_PlayerIdleUp;
+        else if (dir == 270) sprite_index = sprt_PlayerIdle;
     }
-}
-else {
-    // --- PARADO (IDLE) ---
-    if (dir == 0) {
-        sprite_index = sprt_PlayerIdleRight;
-    }
-    else if (dir == 180) {
-        sprite_index = sprt_PlayerIdleLeft;
-    }
-    else if (dir == 90) {
-        sprite_index = sprt_PlayerIdleUp;
-    }
-    else if (dir == 270) {
-        sprite_index = sprt_PlayerIdle;
-    }
-}
 
-if (carregando){
-	image_speed	= 0.1;
-}
-
-// Garante animação correta
-image_speed = moving ? 0.4 : 0;
-image_index = moving ? image_index : 0;
-
-
+    if (carregando) image_speed = 0.2;
+    else if (moving) image_speed = 0.4;
+    else image_speed = 0.3;
 }

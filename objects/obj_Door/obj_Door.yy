@@ -1,10 +1,10 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_Door",
+  "name": "obj_door",
   "spriteId": {
-    "name": "sprt_Porta",
-    "path": "sprites/sprt_Porta/sprt_Porta.yy",
+    "name": "sprt_Player",
+    "path": "sprites/sprt_Player/sprt_Player.yy",
   },
   "solid": false,
   "visible": true,
