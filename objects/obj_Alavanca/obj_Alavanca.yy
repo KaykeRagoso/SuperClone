@@ -1,10 +1,10 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_ButtonHold",
+  "name": "obj_Alavanca",
   "spriteId": {
-    "name": "sprt_BotaoHold",
-    "path": "sprites/sprt_BotaoHold/sprt_BotaoHold.yy",
+    "name": "sprt_Alavanca",
+    "path": "sprites/sprt_Alavanca/sprt_Alavanca.yy",
   },
   "solid": false,
   "visible": true,

@@ -55,7 +55,7 @@ function scr_MovePlayer() {
 
     /// --- Detectar caixa próxima ---
     var box_to_pick = noone;
-    var nearest_dist = 46;
+    var nearest_dist = 42;
     with (obj_Box) {
         if (state == BOX_STATE.GROUND) {
             var d = point_distance(other.x, other.y, x, y);
@@ -67,7 +67,7 @@ function scr_MovePlayer() {
     }
 
     /// --- Pegar / Soltar caixa ---
-    var pressed_pick = keyboard_check_pressed(vk_space)
+    pressed_pick = keyboard_check_pressed(vk_space)
                     || (gamepad_is_connected(_deviceControl) && gamepad_button_check_pressed(_deviceControl, gp_face1));
 
     if (pressed_pick) {

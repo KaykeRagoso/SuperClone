@@ -17,3 +17,4 @@ carregando = false;
 carregando_caixa = noone;
 
 dir = 0;
+pressed_pick = false;
