@@ -26,11 +26,11 @@ function scr_MovePlayer() {
         vspd /= len;
     }
 
-    /// --- Define direção olhando ---
+    /// --- Define direção olhando (usando look_dir) ---
     if (abs(key_x) > abs(key_y)) {
-        dir = (key_x > 0) ? 0 : 180;
+        look_dir = (key_x > 0) ? 0 : 180;
     } else if (abs(key_y) > 0) {
-        dir = (key_y > 0) ? 270 : 90;
+        look_dir = (key_y > 0) ? 270 : 90;
     }
 
     /// --- Colisão com paredes ---
@@ -81,8 +81,8 @@ function scr_MovePlayer() {
         // SOLTAR
         else if (carregando) {
             var drop_dist = 48;
-            var drop_x = x + lengthdir_x(drop_dist, dir);
-            var drop_y = y + lengthdir_y(drop_dist, dir);
+            var drop_x = x + lengthdir_x(drop_dist, look_dir);
+            var drop_y = y + lengthdir_y(drop_dist, look_dir);
 
             var can_drop = true;
 
@@ -119,33 +119,36 @@ function scr_MovePlayer() {
         obj_Transicao.has_spawn = true;
         obj_Transicao.fading_out = true;
     }
-		// Verifica se o player está colidindo com um bloco deslizante
-		var bloco = instance_place(x, y, obj_BlocoDeslizante);
 
-		if (bloco != noone) {
-		    if (keyboard_check_pressed(vk_space)) {
-		        // Pega posição relativa do player em relação ao bloco
-		        var px = x;
-		        var py = y;
+    /// --- Empurrar blocos deslizantes ---
+    var bloco = instance_place(x, y, obj_BlocoDeslizante);
+    if (bloco != noone) {
+        if (keyboard_check_pressed(vk_space)) {
+            var px = x;
+            var py = y;
 
-		        // Player está à direita → bloco vai para esquerda
-		        if (px > bloco.x && abs(px - bloco.x) > abs(py - bloco.y)) {
-		            bloco.move_dir = 180; // esquerda
-		        }
-		        // Player está à esquerda → bloco vai para direita
-		        else if (px < bloco.x && abs(px - bloco.x) > abs(py - bloco.y)) {
-		            bloco.move_dir = 0; // direita
-		        }
-		        // Player está abaixo → bloco vai para cima
-		        else if (py > bloco.y) {
-		            bloco.move_dir = 90; // cima
-		        }
-		        // Player está acima → bloco vai para baixo
-		        else if (py < bloco.y) {
-		            bloco.move_dir = 270; // baixo
-		        }
-		    }
-		}
+            if (px > bloco.x && abs(px - bloco.x) > abs(py - bloco.y)) {
+                bloco.move_dir = 180; // esquerda
+            }
+            else if (px < bloco.x && abs(px - bloco.x) > abs(py - bloco.y)) {
+                bloco.move_dir = 0; // direita
+            }
+            else if (py > bloco.y) {
+                bloco.move_dir = 90; // cima
+            }
+            else if (py < bloco.y) {
+                bloco.move_dir = 270; // baixo
+            }
+        }
+    }
+
+    /// --- Lançador (Hook) ---
+    if (keyboard_check_pressed(ord("Z"))) {
+		
+        var lancador = instance_create_layer(x, y, "Instances_1", obj_Hook);
+        lancador.hook_dir = look_dir; // passa a direção olhando
+		lancador.owner = id;
+    }
 
     /// --- Animação do Player ---
     var moving = (hspd != 0 || vspd != 0);
@@ -159,10 +162,10 @@ function scr_MovePlayer() {
             sprite_index = (vspd > 0) ? sprt_PlayerRunDown : sprt_PlayerRunTop;
         }
     } else {
-        if (dir == 0) sprite_index = sprt_PlayerIdleRight;
-        else if (dir == 180) sprite_index = sprt_PlayerIdleLeft;
-        else if (dir == 90) sprite_index = sprt_PlayerIdleUp;
-        else if (dir == 270) sprite_index = sprt_PlayerIdle;
+        if (look_dir == 0) sprite_index = sprt_PlayerIdleRight;
+        else if (look_dir == 180) sprite_index = sprt_PlayerIdleLeft;
+        else if (look_dir == 90) sprite_index = sprt_PlayerIdleUp;
+        else if (look_dir == 270) sprite_index = sprt_PlayerIdle;
     }
 
     if (carregando) image_speed = 0.2;

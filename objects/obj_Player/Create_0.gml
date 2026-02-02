@@ -1,4 +1,4 @@
-// --- Definindo as variaveis do Player ---
+// --- Definindo as variáveis do Player ---
 spd_max = 1.75;
 spd_caixa = 1;
 hspd = 0;
@@ -16,5 +16,9 @@ carregando_spd = 2;
 carregando = false;
 carregando_caixa = noone;
 
-dir = 0;
+// Direção inicial
+dir = 0;          // variável antiga (não usar mais para hook)
+look_dir = 270;   // nova variável para direção olhando (inicial: para baixo)
+
+// Controle de pegar/soltar
 pressed_pick = false;
