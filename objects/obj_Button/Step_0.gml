@@ -1,4 +1,4 @@
-if (place_meeting(x,y,obj_Player) || place_meeting(x,y,obj_Box)){
+if (place_meeting(x,y,obj_Player) || place_meeting(x,y,obj_Box) || place_meeting(x,y,obj_BlocoDeslizante)){
 	pressed = true;	
 }
 

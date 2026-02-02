@@ -119,6 +119,33 @@ function scr_MovePlayer() {
         obj_Transicao.has_spawn = true;
         obj_Transicao.fading_out = true;
     }
+		// Verifica se o player está colidindo com um bloco deslizante
+		var bloco = instance_place(x, y, obj_BlocoDeslizante);
+
+		if (bloco != noone) {
+		    if (keyboard_check_pressed(vk_space)) {
+		        // Pega posição relativa do player em relação ao bloco
+		        var px = x;
+		        var py = y;
+
+		        // Player está à direita → bloco vai para esquerda
+		        if (px > bloco.x && abs(px - bloco.x) > abs(py - bloco.y)) {
+		            bloco.move_dir = 180; // esquerda
+		        }
+		        // Player está à esquerda → bloco vai para direita
+		        else if (px < bloco.x && abs(px - bloco.x) > abs(py - bloco.y)) {
+		            bloco.move_dir = 0; // direita
+		        }
+		        // Player está abaixo → bloco vai para cima
+		        else if (py > bloco.y) {
+		            bloco.move_dir = 90; // cima
+		        }
+		        // Player está acima → bloco vai para baixo
+		        else if (py < bloco.y) {
+		            bloco.move_dir = 270; // baixo
+		        }
+		    }
+		}
 
     /// --- Animação do Player ---
     var moving = (hspd != 0 || vspd != 0);
