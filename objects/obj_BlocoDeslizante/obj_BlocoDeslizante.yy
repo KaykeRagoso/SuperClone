@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "obj_BlocoDeslizante",
   "spriteId": {
-    "name": "sprt_Player",
-    "path": "sprites/sprt_Player/sprt_Player.yy",
+    "name": "sprt_Box",
+    "path": "sprites/sprt_Box/sprt_Box.yy",
   },
   "solid": false,
   "visible": true,
