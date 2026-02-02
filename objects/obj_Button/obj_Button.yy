@@ -11,7 +11,10 @@
   "managed": true,
   "spriteMaskId": null,
   "persistent": false,
-  "parentObjectId": null,
+  "parentObjectId": {
+    "name": "obj_ButtonHold",
+    "path": "objects/obj_ButtonHold/obj_ButtonHold.yy",
+  },
   "physicsObject": false,
   "physicsSensor": false,
   "physicsShape": 1,

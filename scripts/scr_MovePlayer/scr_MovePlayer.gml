@@ -55,7 +55,7 @@ function scr_MovePlayer() {
 
     /// --- Detectar caixa próxima ---
     var box_to_pick = noone;
-    var nearest_dist = 48;
+    var nearest_dist = 46;
     with (obj_Box) {
         if (state == BOX_STATE.GROUND) {
             var d = point_distance(other.x, other.y, x, y);
