@@ -1,9 +1,10 @@
+
 switch (state) {
     case BOX_STATE.CARRIED:
         if (carrego != noone) {
             // Segue o player
             x = carrego.x;
-            y = carrego.y - sprite_height * 0.70;
+            y = carrego.y - sprite_height * 1.50;
 
             // Escala maior
             image_xscale = escala_carried;

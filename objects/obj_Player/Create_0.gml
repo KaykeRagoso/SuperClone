@@ -6,6 +6,9 @@ vspd = 0;
 
 life = 3;
 max_life = life;
+life_alpha = array_create(max_life,1);
+fade_speed = 0.08;
+
 
 life_offset_x = 32;
 life_offset_y = 64;
@@ -22,3 +25,6 @@ look_dir = 270;   // nova variável para direção olhando (inicial: para baixo)
 
 // Controle de pegar/soltar
 pressed_pick = false;
+
+alpha = 1;
+alpha_seg = .10;

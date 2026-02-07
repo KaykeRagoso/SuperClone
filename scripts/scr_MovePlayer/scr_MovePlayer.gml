@@ -145,9 +145,11 @@ function scr_MovePlayer() {
     /// --- Lançador (Hook) ---
     if (keyboard_check_pressed(ord("Z"))) {
 		
-        var lancador = instance_create_layer(x, y, "Instances_1", obj_Hook);
+		var lancador = instance_create_depth(x,y,1,obj_Hook)
         lancador.hook_dir = look_dir; // passa a direção olhando
 		lancador.owner = id;
+		
+
     }
 
     /// --- Animação do Player ---

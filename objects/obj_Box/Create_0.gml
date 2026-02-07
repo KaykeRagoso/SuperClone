@@ -1,3 +1,4 @@
+
 enum BOX_STATE {
     GROUND,
     CARRIED,
